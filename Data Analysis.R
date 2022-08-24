@@ -147,6 +147,7 @@ library(corrplot)
   
   ## Chiave e modalità delle canzoni più popolari
     
+    # Non dovrebbe servire
     top_200_song <- top_200_song %>%
       mutate(key_name = map(key, function(x){
         switch (x,
@@ -199,9 +200,89 @@ library(corrplot)
       xlab("Song Genre") + 
       ylab("Number of songs")
     
-      
+    
+## Top 10 canzoni
+    
+  # Data-frame
+    
+    top_10_song <- all_genre_top_artist %>%
+      select(genre, name, top.song)
+    
+    colnames(top_10_song)[2] <- "artist.name"
+    
+    top_10_song <- unnest(top_10_song, top.song)
+    
+    top_10_song <- top_10_song %>%
+      arrange(desc(popularity)) 
+    
+    top_10_song <- top_10_song[!duplicated(top_10_song$name), ]
+    
+    top_10_song <- top_10_song %>%
+      head(10) %>%
+      select(-id, -track_number, -album.id, -album.name, -album.total_tracks, -album.type, -duration_ms)
+    
+    top_10_song <- unnest(top_10_song, song.features)
+    
+    # Creazione nuova colonna duration_s (conversione della colonna duration_ms in secondi)
+    top_10_song <- top_10_song %>%
+      mutate(duration_s = map(duration_ms, function(x){x/1000}))
+    
+    # Assegnazione tipo numerico alla nuova colonna duration_s
+    top_10_song$duration_s <- as.numeric(top_10_song$duration_s)
+    
+  
+  # Analisi top 10 canzoni
+    
+    # Acousticness
+    ggplot(data = top_10_song, mapping = aes(x = name, y = acousticness, fill = genre, shape = genre)) +
+      geom_col() +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle = 25, hjust = 0.5)) +
+      ggtitle('Acousticness', subtitle = 'For top 10 songs on Spotify')
+    
+    # Loudness
+    ggplot(data = top_10_song, mapping = aes(x = name, y = loudness, fill = genre, shape = genre)) +
+      geom_col() +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle = 25, hjust = 0.5)) +
+      ggtitle('Acousticness', subtitle = 'For top 10 songs on Spotify')
+    
+    # Valence
+    ggplot(data = top_10_song, mapping = aes(x = name, y = valence, fill = genre, shape = genre)) +
+      geom_col() +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle = 25, hjust = 0.5)) +
+      ggtitle('Acousticness', subtitle = 'For top 10 songs on Spotify')
+    
+    # Danceability
+    ggplot(data = top_10_song, mapping = aes(x = name, y = danceability, fill = genre, shape = genre)) +
+      geom_col() +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle = 25, hjust = 0.5)) +
+      ggtitle('Acousticness', subtitle = 'For top 10 songs on Spotify')
     
     
+    
+## Top 10 canzoni
+    
+  # Data-frame
+    
+    top_10_artist <- all_genre_top_artist %>%
+      arrange(desc(popularity)) %>%
+      head(10)
+    
+  # Analisi top 10 artisti
+    
+    top_10_artist %>%
+      count(genre) %>%
+      ggplot() +
+      geom_col(aes(x = genre, y = n, fill = genre)) +
+      coord_polar() +
+      theme_bw() +
+      theme(axis.text.x = element_text(hjust = 1), axis.text.y = element_text(hjust = 1)) + 
+      ggtitle("Most popular artist genre") + 
+      xlab("Artist genre") + 
+      ylab("Number of time that comapre a genre")
     
     
     
