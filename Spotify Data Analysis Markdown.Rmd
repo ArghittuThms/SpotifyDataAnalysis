@@ -1,0 +1,33 @@
+---
+title: "Spotify Data Analysis: la musica al giorno d'oggi"
+author: Thomas Arghittu - 157802 - arghittu.thomas@spes.uniud.it
+date: 24/08/2022
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+---
+<style>
+  * {
+  text-align: justify;
+}
+
+  .title, .author, .date  {
+  text-align: center;
+}
+</style>
+
+<p>
+  <a>Spotify</a>, il servizio di streaming musicale offerto dall'omonimo colosso svedese, ha raggiunto lo scorso febbraio 406 milioni di utenti attivi
+  mensili diventando così uno dei servizi online più popolari di sempre: d'altra parte, chi non ne ha mai sentito parlare? Il suo algoritmo è in grado
+  di consigliare brani e podcast per tutti i gusti nei minimi dettagli, grazie alla grande quantità di variabili che si celano dietro ogni canzone o
+  artista. <br>
+  Negli ultimi anni sono diventato un grande ascoltatore e, sebbene abbia scoperto il fascino della collezione di vinili, Spotify rimane sempre un mio
+  alleato quando mi sposto fuori di casa. <br>
+  Buttandomi anche nel mondo della produzione musicale, in maniera molto amatoriale, mi sono sempre chiesto quali fossero gli ingredienti per creare una
+  canzone di successo: questa analisi dei dati quindi, punta a rispondere a questo quesito utilizzando le informazioni provenienti dalle APIs di 
+  Spotify.
+</p>
+<p>
+  
+</p>
