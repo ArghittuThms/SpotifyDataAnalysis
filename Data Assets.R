@@ -8,8 +8,8 @@ library(spotifyr)
 
 devtools::install_github('charlie86/spotifyr')
 
-Sys.setenv(SPOTIFY_CLIENT_ID = '4c0f54d6d78649bc871e2078d15d0b4e')
-Sys.setenv(SPOTIFY_CLIENT_SECRET = 'b9d8dff917b047df9cd9882703a8d77a')
+Sys.setenv(SPOTIFY_CLIENT_ID = '')
+Sys.setenv(SPOTIFY_CLIENT_SECRET = '')
 
 access_token <- get_spotify_access_token()
 
