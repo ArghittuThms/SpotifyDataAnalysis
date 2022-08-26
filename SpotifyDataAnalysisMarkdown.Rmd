@@ -24,14 +24,31 @@ editor_options:
   text-align: center;
 }
 
-  img {
+.showopt {
+  background-color: #004c93;
+  color: #FFFFFF; 
+  width: 100px;
+  height: 20px;
   text-align: center;
+  vertical-align: middle !important;
+  float: right;
+  font-family: sans-serif;
+  border-radius: 8px;
+}
+
+.showopt:hover {
+    background-color: #dfe4f2;
+    color: #004c93;
+}
+
+pre.plot {
+  background-color: white !important;
 }
   
 </style>
 ```
 ```{r message=FALSE, warning=FALSE, include=FALSE}
-knitr::opts_chunk$set(cache = TRUE)
+knitr::opts_chunk$set(cache = TRUE, fig.align = "center")
 #load(file = "datidausare.RData")
 ```
 
@@ -86,7 +103,7 @@ library(broom)      # Converte data-frame in strutture dati tipo tibbles
 library(tidyr)      # Manipolazione dei dati
 library(spotifyr)   # Metodi per utilizzo delle APIs Spotify
 library(corrplot)   # Grafici di correlazione
-library(DT)         # Stampa tabelle su html
+library(kableExtra) # Stampa tabelle su html
 ```
 
 # Preparazione dei dati
@@ -219,7 +236,7 @@ Il data-set così ottenuto è composto da:
 ## Sommario delle variabili
 
 | Nome variabile   | Descrizione                                                                                                    |
-|---------------|---------------------------------------------------------------------|
+|------------------|------------------------------------------------------|
 | id               | Identificativo unico utilizzato da Spotify per individuare canzoni o artisti                                   |
 | name             | Nome canzone o artista                                                                                         |
 | popularity       | Indice che identifica popolarità di una canzone o artista (Range 0:100)                                        |
@@ -244,7 +261,7 @@ Il data-set così ottenuto è composto da:
 
 ## Caratteristiche di ogni genere
 
-```{r echo=TRUE, message=FALSE, warning=FALSE}
+```{r echo=TRUE, message=FALSE, warning=FALSE, fig.align='center'}
 
     audio_features <- all_genre_top_artist %>%
       select(top.song)
@@ -308,7 +325,7 @@ generi.
 
 </p>
 
-## Caratteristiche medie dei generi 
+## Caratteristiche medie dei generi
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 # Creazione data-frame per visualizzazione delle caratteristiche generali di ogni genere 
@@ -467,13 +484,33 @@ sono:
       theme(axis.text.x = element_text(angle = 50, hjust = 1),axis.text.y = element_blank())
 ```
 
+<p>
+
+Studiando la durata delle canzoni più popolari si ricava che:
+
+-   il rap ha un'alta concentrazione tra i 150s e 210s, che risale
+    leggermente tra 290s e 320s
+
+-   il pop è più distribuito, variando dai 150s ai 275s
+
+-   la musica latina come il pop è maggiormente distribuita con valori
+    più alti, da 170s a 280s
+
+La lunghezza ideale di una canzone destinata a diventare virale si
+aggira quindi in un range di 150 e 120 secondi.
+
+</p>
+
+### Tonalità canzoni più popolari
+
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 # Grafico
     ggplot(data = top_200_song, mapping = aes(x = key, fill = genre)) +
       geom_bar(aes(color = genre), position="dodge") +
       labs(title = 'Key of most popularity song',x = '', y = '') +
       theme_bw() +
-      scale_x_continuous(breaks = 0:11, labels = c("C", "C #", "D", "D #", "E", "F", "F #", "G", "G #", "A", "A #", "B")) +
+      scale_x_continuous(breaks = 0:11, labels = c("C", "C #", "D", "D #", "E", "F",
+                                                   "F #", "G", "G #", "A", "A #", "B")) +
       theme(axis.text.x = element_text(angle = 50, hjust = 1), axis.text.y = element_blank())
     
     
@@ -481,6 +518,171 @@ sono:
       geom_density(aes(color = genre)) +
       labs(title = 'Key of most popularity song',x = '', y = '') +
       theme_bw() +
-      scale_x_continuous(breaks = 0:11, labels = c("C", "C #", "D", "D #", "E", "F", "F #", "G", "G #", "A", "A #", "B")) +
+      scale_x_continuous(breaks = 0:11, labels = c("C", "C #", "D", "D #", "E", "F",
+                                                   "F #", "G", "G #", "A", "A #", "B")) +
       theme(axis.text.x = element_text(angle = 50, hjust = 1), axis.text.y = element_blank())
 ```
+
+Da questi due grafici (che mostrano lo stesso studio ma con due modalità
+diverse) si conclude che:
+
+-   nelle canzoni pop vengono utilizzate tutte le tonalità in maniera
+    omogenea, con qualche preferenza nelle tonalità di **DO** e meno in
+    quelle di **LA** e **SI**
+
+-   nelle canzoni rap invece c'è un forte utilizzo di tonalità di **DO**
+    e **RE**
+
+-   nelle canzoni latine c'è un utilizzo sempre più omogeneo con
+    preferenze nelle tonalità di **FA** e **LA**
+
+## Top 10 canzoni a livello mondiale
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+# Data-frame
+    top_10_song <- all_genre_top_artist %>%
+      select(genre, name, top.song)
+    
+    colnames(top_10_song)[2] <- "artist.name"
+    
+    top_10_song <- unnest(top_10_song, top.song)
+    
+    top_10_song <- top_10_song %>%
+      arrange(desc(popularity)) 
+    
+    top_10_song <- top_10_song[!duplicated(top_10_song$name), ]
+    
+    top_10_song <- top_10_song %>%
+      head(10) %>%
+      select(-id, -track_number, -album.id, -album.name, 
+             -album.total_tracks, -album.type, -duration_ms)
+    
+    top_10_song <- unnest(top_10_song, song.features)
+    
+    # Creazione nuova colonna duration_s (conversione della 
+    # colonna duration_ms in secondi)
+    top_10_song <- top_10_song %>%
+      mutate(duration_s = map(duration_ms, function(x){x/1000}))
+    
+    # Assegnazione tipo numerico alla nuova colonna duration_s
+    top_10_song$duration_s <- as.numeric(top_10_song$duration_s)
+```
+
+| Nome Canzone                            | Nome Artista  | Genere | Popolarità |
+|-----------------------------|---------------|---------------|---------------|
+| Quevedo: Bzrp Music Sessions, Vol. 52   | Bizarrap      | pop    | 100        |
+| Me Porto Bonito                         | Bad Bunny     | latin  | 99         |
+| Tití Me Preguntó                        | Bad Bunny     | latin  | 97         |
+| Efecto                                  | Bad Bunny     | latin  | 96         |
+| Glimpse of Us                           | Joji          | pop    | 96         |
+| Ojitos Lindos                           | Bomba Estéreo | pop    | 96         |
+| Moscow Mule                             | Bad Bunny     | latin  | 95         |
+| Left and Right (Feat. Jung Kook of BTS) | BTS           | pop    | 94         |
+| PROVENZA                                | KAROL G       | latin  | 94         |
+| As it was                               | Harry Styles  | pop    | 93         |
+
+### Acustica
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+    ggplot(data = top_10_song, mapping = aes(x = name, y = acousticness, 
+                                             fill = genre, shape = genre)) +
+      geom_col() +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle = 25, hjust = 0.5)) +
+      ggtitle('Acousticness', subtitle = 'For top 10 songs on Spotify')
+```
+
+<p>
+
+Esiste una forte diversità di acustica tra le top 10 canzoni a livello
+mondiale
+
+</p>
+
+### Livello del volume
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+    ggplot(data = top_10_song, mapping = aes(x = name, y = loudness, 
+                                             fill = genre, shape = genre)) +
+      geom_col() +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle = 25, hjust = 0.5)) +
+      ggtitle('Loudness', subtitle = 'For top 10 songs on Spotify')
+```
+
+<p>
+
+Il livello del volume è molto più omogeneo rispetto l'acustica, ad
+eccezione di **Efecto** e **Glimpse of us** che hanno valori più forti
+
+</p>
+
+### Positività
+
+```{r}
+ggplot(data = top_10_song, mapping = aes(x = name, y = valence, 
+                                         fill = genre, shape = genre)) +
+      geom_col() +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle = 25, hjust = 0.5)) +
+      ggtitle('Valence', subtitle = 'For top 10 songs on Spotify')
+```
+
+<p>
+
+Anche qui i valori sono piuttosto eterogenei, con canzoni tipo **As it
+was**, **Glimpse of us**, **provenza** e **Quevedo** che presentano alti
+livelli di positività.
+
+</p>
+
+### Danzabilità
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+    ggplot(data = top_10_song, mapping = aes(x = name, y = danceability,
+                                             fill = genre, shape = genre)) +
+      geom_col() +
+      theme_bw() +
+      theme(axis.text.x = element_text(angle = 25, hjust = 0.5)) +
+      ggtitle('Danceability', subtitle = 'For top 10 songs on Spotify')
+```
+
+<p>
+
+Nelle top 10 canzoni a livello mondiale, il livello di danzabilità del
+brano è sempre alto
+
+</p>
+
+## Top 10 artisti a livello mondiale
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+  # Data-frame
+    
+    top_10_artist <- all_genre_top_artist %>%
+      arrange(desc(popularity)) %>%
+      head(10)
+    
+  # Analisi top 10 artisti
+    
+    top_10_artist %>%
+      count(genre) %>%
+      ggplot() +
+      geom_col(aes(x = genre, y = n, fill = genre)) +
+      coord_polar() +
+      theme_bw() +
+      theme(axis.text.x = element_text(hjust = 1), 
+            axis.text.y = element_text(hjust = 1)) + 
+      ggtitle("Most popular artist genre") + 
+      xlab("Artist genre") + 
+      ylab("Number of time that comapre a genre")
+```
+
+<p>
+
+Come per le canzoni pop, gli artisti pop sono molto più famosi rispetto
+agli altri generi. Interessante però vedere che anche se le loro canzoni
+non appaiono attualmente in top 10, sono gli artisti rap ad essere più
+famosi di quelli di musica latina.
+
+</p>
