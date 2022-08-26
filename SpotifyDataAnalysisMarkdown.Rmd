@@ -17,34 +17,19 @@ editor_options:
 ```{=html}
 <style>
   * {
-  text-align: justify;
-}
-
-  .title, .author, .date,  {
-  text-align: center;
-}
-
-.showopt {
-  background-color: #004c93;
-  color: #FFFFFF; 
-  width: 100px;
-  height: 20px;
-  text-align: center;
-  vertical-align: middle !important;
-  float: right;
-  font-family: sans-serif;
-  border-radius: 8px;
-}
-
-.showopt:hover {
-    background-color: #dfe4f2;
-    color: #004c93;
-}
-
-pre.plot {
-  background-color: white !important;
-}
+    text-align: justify;
+  }
   
+  .title, .author, .date {
+    text-align: center;
+  }
+  
+  #backtotop {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+  }
+    
 </style>
 ```
 ```{r message=FALSE, warning=FALSE, include=FALSE}
@@ -81,7 +66,15 @@ quesito utilizzando le informazioni provenienti dalle APIs di Spotify.
 Per poter affrontare l'argomento, ho deciso di utilizzare un approccio
 up-to-down, partendo dagli aspetti più generali per poi andare a
 restringere sempre di più il campo fino ad andare ad analizzare le 10
-canzoni e i 10 artisti più in voga al momento a livello mondiale.
+canzoni e i 10 artisti più in voga al momento a livello mondiale:
+
+-   Quali sono le caratteristiche dei diversi generi musicali?
+
+-   Che correlazione esiste tra di esse?
+
+-   Quali sono le caratteristiche delle canzoni più popolari al mondo?
+
+-   Cosa differenzia le migliori 10 canzoni da altri brani?
 
 </p>
 
@@ -132,9 +125,9 @@ utilizzare poi nelle richieste tramite APIs.
 
 ```{r message=FALSE, warning=FALSE, paged.print=TRUE, eval=FALSE}
 # Identificatico account Spotify
-Sys.setenv(SPOTIFY_CLIENT_ID = '4c0f54d6d78649bc871e2078d15d0b4e')
+Sys.setenv(SPOTIFY_CLIENT_ID = '********************************')
 # Codice personale per utilizzo APIs
-Sys.setenv(SPOTIFY_CLIENT_SECRET = 'b9d8dff917b047df9cd9882703a8d77a')      
+Sys.setenv(SPOTIFY_CLIENT_SECRET = '**********************************')      
 
 # Restituisce il token
 access_token <- get_spotify_access_token()                                  
@@ -236,7 +229,7 @@ Il data-set così ottenuto è composto da:
 ## Sommario delle variabili
 
 | Nome variabile   | Descrizione                                                                                                    |
-|------------------|------------------------------------------------------|
+|---------------------|---------------------------------------------------|
 | id               | Identificativo unico utilizzato da Spotify per individuare canzoni o artisti                                   |
 | name             | Nome canzone o artista                                                                                         |
 | popularity       | Indice che identifica popolarità di una canzone o artista (Range 0:100)                                        |
@@ -497,7 +490,7 @@ Studiando la durata delle canzoni più popolari si ricava che:
     più alti, da 170s a 280s
 
 La lunghezza ideale di una canzone destinata a diventare virale si
-aggira quindi in un range di 150 e 120 secondi.
+aggira quindi in un range di 150 e 250s secondi.
 
 </p>
 
@@ -569,7 +562,7 @@ diverse) si conclude che:
 ```
 
 | Nome Canzone                            | Nome Artista  | Genere | Popolarità |
-|-----------------------------|---------------|---------------|---------------|
+|---------------------|-----------------|-----------------|-----------------|
 | Quevedo: Bzrp Music Sessions, Vol. 52   | Bizarrap      | pop    | 100        |
 | Me Porto Bonito                         | Bad Bunny     | latin  | 99         |
 | Tití Me Preguntó                        | Bad Bunny     | latin  | 97         |
@@ -686,3 +679,48 @@ non appaiono attualmente in top 10, sono gli artisti rap ad essere più
 famosi di quelli di musica latina.
 
 </p>
+
+# Come fare una canzone popolare
+
+<p>
+
+E' giunto il momento di fare un po di considerazioni e rispondere alla
+domanda iniziale: quali sono gli ingredienti di una canzone di successo,
+in grado di arrivare fino alle vette delle classifiche mondiali?\
+Dalle analisi appena fatte, possiamo dire che:
+
+-   Sicuramente i generi più popolari al giorno d'oggi sono il pop, la
+    musica latina e l'hip-hop (tentare di sfondare con canzoni di tipo
+    metal o rock ha una bassissima probabilità di riuscita)
+
+-   Cercare di produrre un brano con un elevato livello di energia,
+    livello del volume e danzabilità aumenta di parecchio le possibilità
+    che diventi virale
+
+-   E' quasi necessario che ci sia la presenza di voci nella traccia
+    (che quindi non ci sia solo la parte strumentale) in modo tale che
+    gli ascoltatori possano cantare e aumentare le probabilità di
+    riascolto dello stesso brano nel lungo periodo
+
+-   Mantenere un range di durata della canzone tra i 150s e 250s è molto
+    più conveniente rispetto a canzoni che durano più di 5 minuti (con
+    canzoni più corte si aumenta anche la possibilità di passare in
+    radio aumentando il numero di persone che ascoltano la canzone)
+
+-   Non è necessario che la canzone sia positiva: anche le canzoni più
+    tristi hanno la stessa popolarità
+
+-   In relazione al genere del brano, utilizzare i tipi di tonalità più
+    usati potrebbe far risultare anche una nuova canzone molto familiare
+    e di conseguenza far aumentare le possibilità che venga apprezzata
+
+Queste dunque sono le caratteristiche che hanno le canzoni più popolari
+del momento: ovviamente i tempi cambiano e queste considerazioni sono
+molto diverse da quelle che avremmo ottenuto dalle stesse analisi 30
+anni fa (in cui generi come il pop e l'hip-hop erano alle origini).
+Interessante sarebbe ripete lo studio tra qualche anno per vedere come
+si evolvono i generi e i gusti della gente.
+
+</p>
+
+[Back to top](#){#backtotop}
