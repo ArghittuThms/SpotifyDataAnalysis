@@ -263,7 +263,7 @@ library(corrplot)
     
     
     
-## Top 10 canzoni
+## Top 10 artisti
     
   # Data-frame
     
