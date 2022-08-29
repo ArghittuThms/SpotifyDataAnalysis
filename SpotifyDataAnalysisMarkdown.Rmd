@@ -347,7 +347,8 @@ generi.
     # Creazione grafico 
     ggplot(genre_analysis_average, aes(fill=Characteristic, y=value, x=genre)) + 
       geom_bar(position="dodge", stat="identity") +
-      theme_bw()
+      theme_bw()+
+      theme(axis.text.x = element_text(angle = 50, hjust = 1),axis.text.y = element_blank())
 ```
 
 ## Correlazione tra variabili
@@ -651,11 +652,26 @@ brano è sempre alto
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
   # Data-frame
-    
     top_10_artist <- all_genre_top_artist %>%
       arrange(desc(popularity)) %>%
       head(10)
     
+```
+
+| Nome Artista  | Genere | Popolarità |
+|---------------|--------|------------|
+| Bad Bunny     | latin  | 100        |
+| Drake         | rap    | 95         |
+| Taylor Swift  | pop    | 93         |
+| The Weeknd    | pop    | 93         |
+| Harry Styles  | pop    | 91         |
+| BTS           | pop    | 91         |
+| Justin Bieber | pop    | 90         |
+| Ed Sheeran    | pop    | 90         |
+| Kanye West    | rap    | 90         |
+| Eminem        | rap    | 90         |
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
   # Analisi top 10 artisti
     
     top_10_artist %>%

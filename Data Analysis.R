@@ -269,7 +269,7 @@ library(corrplot)
     
     top_10_artist <- all_genre_top_artist %>%
       arrange(desc(popularity)) %>%
-      head(10)
+      head(11)
     
   # Analisi top 10 artisti
     
