@@ -228,7 +228,7 @@ Il data-set così ottenuto è composto da:
 ## Sommario delle variabili
 
 | Nome variabile   | Descrizione                                                                                                    |
-|---------------------|---------------------------------------------------|
+|------------------|----------------------------------------------------------------------------------------------------------------|
 | id               | Identificativo unico utilizzato da Spotify per individuare canzoni o artisti                                   |
 | name             | Nome canzone o artista                                                                                         |
 | popularity       | Indice che identifica popolarità di una canzone o artista (Range 0:100)                                        |
@@ -562,7 +562,7 @@ diverse) si conclude che:
 ```
 
 | Nome Canzone                            | Nome Artista  | Genere | Popolarità |
-|---------------------|-----------------|-----------------|-----------------|
+|-----------------------------------------|---------------|--------|------------|
 | Quevedo: Bzrp Music Sessions, Vol. 52   | Bizarrap      | pop    | 100        |
 | Me Porto Bonito                         | Bad Bunny     | latin  | 99         |
 | Tití Me Preguntó                        | Bad Bunny     | latin  | 97         |
